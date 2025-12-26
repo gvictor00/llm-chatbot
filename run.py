@@ -31,7 +31,7 @@ class ApplicationRunner:
             # Start uvicorn server
             self.backend_process = subprocess.Popen([
                 sys.executable, "-m", "uvicorn",
-                "src.main:app",  # Changed from backend.main:app
+                "backend.main:app",  # Changed from backend.main:app
                 "--reload",
                 "--host", "0.0.0.0",
                 "--port", "8000"

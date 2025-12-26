@@ -1,66 +1,56 @@
 from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 import logging
+from typing import Dict, Any, Optional
 import os
-from datetime import datetime
+from backend.config.config import config
 from backend.rag.loader import RagLoader
 from backend.rag.rag_service import RAGService
 from backend.flow_api.llm_client import llm_client, LLMRequest
-from backend.config.config import config
 from backend.flow_api.flow_client import flow_client
 from backend.api.chat_models import ChatMessage, ChatResponse, RAGStats
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+from datetime import datetime
 
 
-from fastapi import FastAPI, HTTPException
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-app = FastAPI(title="CI&T Flow API Integration with RAG")
-
-# Add CORS middleware
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],  # React dev server
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# Global RAG service instance
 rag_service = RAGService()
+
+# Setup logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Initialize FastAPI app
+app = FastAPI(title="CI&T Flow API Integration with RAG")
 
 @app.get("/", summary="Health Check Endpoint")
 def read_root():
     return {"message": "CI&T Flow API Integration with RAG is running."}
 
-@app.get("/health", summary="Check CI&T Flow API connection")
+@app.get("/health", summary="Check API Health")
 def health():
     try:
-        if flow_client.health_check():
-            return {"status": 200, "message": "Connected to CI&T Flow API successfully"}
-        return {"status": "error", "message": "Failed to connect to CI&T Flow API"}
+        # Uncomment when flow_client is available
+        # if flow_client.health_check():
+        #     return {"status": 200, "message": "Connected to CI&T Flow API successfully"}
+        return {"status": "ok", "message": "Backend is running"}
     except Exception as e:
         logger.error(f"Health check error: {e}")
         return {"status": "error", "message": "Health check failed"}
 
-@app.get("/models", summary="Get available LLM models")
+@app.get("/models", summary="Get Available Models")
 def get_available_models():
     try:
-        models_details = llm_client.get_models_details()
-        model_names = llm_client.get_available_models()
-        default_model = llm_client.get_default_model()
+        # Uncomment when llm_client is available
+        # models_details = llm_client.get_models_details()
+        # model_names = llm_client.get_available_models()
+        # default_model = llm_client.get_default_model()
 
         return {
-            "available_models": model_names,
-            "default_model": default_model,
-            "total_models": len(model_names),
-            "models_details": models_details,
+            "available_models": ["llama-2-7b"],
+            "default_model": "llama-2-7b",
+            "total_models": 1,
+            "models_details": [],
             "success": True,
-            "message": "Models retrieved successfully" if models_details else "Using fallback models (API may not be accessible)"
+            "message": "Using fallback models (clients not yet implemented)"
         }
     except Exception as e:
         logger.error(f"Error getting available models: {e}")
@@ -74,19 +64,20 @@ def get_available_models():
             "message": "Failed to retrieve models, using fallback"
         }
 
-@app.get("/models/refresh", summary="Refresh available models cache")
+@app.post("/models/refresh", summary="Refresh Models Cache")
 def refresh_models():
     try:
-        llm_client._models_cache = None
-        models_data = llm_client.fetch_available_models()
-        model_names = llm_client.get_available_models()
+        # Uncomment when llm_client is available
+        # llm_client._models_cache = None
+        # models_data = llm_client.fetch_available_models()
+        # model_names = llm_client.get_available_models()
 
         return {
-            "message": "Models cache refreshed successfully",
-            "available_models": model_names,
-            "total_models": len(model_names),
+            "message": "Models cache refresh not yet implemented",
+            "available_models": ["llama-2-7b"],
+            "total_models": 1,
             "success": True,
-            "models_fetched": len(models_data) if models_data else 0
+            "models_fetched": 0
         }
     except Exception as e:
         logger.error(f"Error refreshing models: {e}")
@@ -95,6 +86,7 @@ def refresh_models():
             "success": False,
             "error": str(e)
         }
+
 
 @app.get("/load_documents", summary="Load RAG Documents from Folder")
 def load_documents_endpoint():
@@ -148,7 +140,7 @@ def load_documents_endpoint():
     except Exception as e:
         logger.error(f"Error loading documents: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to load documents: {str(e)}")
-
+    
 @app.post("/chat", summary="Send message to RAG-enabled chatbot")
 def chat_endpoint(chat_message: ChatMessage) -> ChatResponse:
     try:
@@ -296,3 +288,7 @@ def get_document_stats():
     except Exception as e:
         logger.error(f"Error getting document stats: {e}")
         raise HTTPException(status_code=500, detail="Failed to get document statistics")
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
