@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { chatAPI } from '../services/api';
+
 export const useChat = () => {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -51,38 +52,48 @@ export const useChat = () => {
     setError(null);
 
     try {
+      console.log('Sending message:', messageText);
       const response = await chatAPI.sendMessage(messageText, options);
+      console.log('Received response:', response);
       
       const botMessage = {
-        content: response.response,
+        content: response.response || 'I apologize, but I received an empty response.',
         isUser: false,
         timestamp: new Date().toISOString(),
         metadata: response.metadata,
-        contextUsed: response.context_used,
+        contextUsed: response.context_used || [],
         success: response.success,
+        isError: !response.success,
       };
 
       setMessages(prev => [...prev, botMessage]);
 
-      if (!response.success && response.error_message) {
-        setError(response.error_message);
+      if (!response.success) {
+        if (response.error_message) {
+          setError(`Response error: ${response.error_message}`);
+        }
+      } else {
+    setError(null);
       }
 
       return response;
-    } catch (err) {
+      } catch (err) {
+      console.error('Error sending message:', err);
+
       const errorMessage = {
-        content: 'Sorry, I encountered an error while processing your message. Please try again.',
+        content: `Sorry, I encountered an error while processing your message: ${err.response?.data?.detail || err.message || 'Unknown error'}`,
         isUser: false,
         timestamp: new Date().toISOString(),
         isError: true,
+        contextUsed: [],
       };
 
       setMessages(prev => [...prev, errorMessage]);
-      setError(err.response?.data?.detail || err.message || 'An error occurred');
+      setError(err.response?.data?.detail || err.message || 'An error occurred while sending the message');
       throw err;
     } finally {
       setIsLoading(false);
-    }
+      }
   }, []);
 
   const clearChat = useCallback(() => {
@@ -100,15 +111,15 @@ export const useChat = () => {
 
       if (connected) {
         try {
-        await loadDocuments();
-      } catch (err) {
-        console.warn('Could not load documents on initialization:', err);
+          await loadDocuments();
+        } catch (err) {
+          console.warn('Could not load documents on initialization:', err);
+        }
       }
-      }
-    };
+  };
 
     initialize();
-  }, []);
+  }, [checkConnection, loadDocuments]);
   return {
     messages,
     isLoading,
@@ -119,5 +130,5 @@ export const useChat = () => {
     clearChat,
     checkConnection,
     loadDocuments,
-  };
+};
 };

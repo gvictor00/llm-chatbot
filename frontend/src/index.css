@@ -10,43 +10,63 @@
 
 @layer components {
   .message-bubble {
-    @apply max-w-xs lg:max-w-md px-4 py-2 rounded-lg break-words;
+    @apply max-w-2xl px-4 py-3 rounded-2xl break-words shadow-sm;
+    animation: slideIn 0.3s ease-out;
   }
 
   .user-message {
-    @apply bg-blue-500 text-white ml-auto;
+    @apply bg-blue-500 text-white;
   }
 
   .bot-message {
-    @apply bg-gray-200 text-gray-800 mr-auto;
+    @apply bg-white border border-gray-200 text-gray-800;
+  }
+
+  .error-message {
+    @apply bg-red-50 border border-red-200 text-red-800;
   }
 
   .typing-indicator {
-    @apply flex space-x-1 p-3;
+    @apply flex space-x-1 p-2;
   }
 
   .typing-dot {
-    @apply w-2 h-2 bg-gray-400 rounded-full animate-bounce;
+    @apply w-2 h-2 bg-blue-400 rounded-full animate-bounce;
   }
-}
 
-/* Custom scrollbar */
-.chat-history::-webkit-scrollbar {
-  width: 6px;
-}
+  .message-content {
+    @apply leading-relaxed;
+  }
 
-.chat-history::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 3px;
-}
+  /* Enhanced scrollbar */
+  .chat-history::-webkit-scrollbar {
+    width: 8px;
+  }
 
-.chat-history::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 3px;
-}
+  .chat-history::-webkit-scrollbar-track {
+    background: #f8fafc;
+    border-radius: 4px;
+  }
 
-.chat-history::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
+  .chat-history::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+
+  .chat-history::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }
 
 body {
@@ -56,6 +76,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #f8fafc;
 }
 
 code {
