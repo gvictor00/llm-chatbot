@@ -1,7 +1,7 @@
 import requests
-from src.config.config import config
-from src.flow_api.endpoints import FlowAPIEndpoints
-from src.flow_api.models import FlowAccessToken, HealthStatus
+from backend.config.config import config
+from backend.flow_api.endpoints import FlowAPIEndpoints
+from backend.flow_api.models import FlowAccessToken, HealthStatus
 
 class FlowAPIClient:
     def __init__(self):
@@ -74,7 +74,7 @@ class FlowAPIClient:
             "Content-Type": "application/json"
         }
         try:
-            print("Performing health check to", url, "with payload:", headers)
+            #print("Performing health check to", url, "with payload:", headers)
             response = requests.get(url, headers=headers, timeout=5)
             response.raise_for_status()
 

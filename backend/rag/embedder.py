@@ -1,7 +1,7 @@
 import logging
 from typing import List
 from langchain_core.documents import Document
-from src.rag.models import DocumentMetadata, EmbeddedDocument
+from backend.rag.models import DocumentMetadata, EmbeddedDocument
 
 logger = logging.getLogger(__name__)
 

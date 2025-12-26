@@ -56,7 +56,7 @@ echo "Place your documents in the 'files' directory." > files/test.txt
 ### 6. Run the application
 ```bash
 # Using uvicorn directly
-uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
+uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
 
 # Or using the run script
 python run.py

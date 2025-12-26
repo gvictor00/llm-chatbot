@@ -17,7 +17,7 @@ class RagConfig:
         self.recurse_folders = data.get("recurse_folders", False)
 
 class Config:
-    def __init__(self, config_path: str = "src/config/config.yaml"):
+    def __init__(self, config_path: str = "backend/config/config.yaml"):
         with open(config_path, "r") as f:
             data = yaml.safe_load(f)
         self.client = ClientConfig(data.get("client", {}))

@@ -5,7 +5,7 @@ from typing import List
 from pathlib import Path
 from langchain_community.document_loaders import TextLoader, PyPDFLoader
 from langchain_core.documents import Document
-from src.rag.models import DocumentMetadata
+from backend.rag.models import DocumentMetadata
 
 logger = logging.getLogger(__name__)
 

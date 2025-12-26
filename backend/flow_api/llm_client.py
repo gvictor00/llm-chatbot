@@ -4,9 +4,9 @@ import http.client
 import json
 from typing import Dict, Any, Optional, List
 from dataclasses import dataclass
-from src.flow_api.flow_client import flow_client
-from src.flow_api.models import FlowAPIError, LLMCapabilities, SupportedModel
-from src.config.config import config
+from backend.flow_api.flow_client import flow_client
+from backend.flow_api.models import FlowAPIError, LLMCapabilities, SupportedModel
+from backend.config.config import config
 from urllib.parse import urlparse
 
 logger = logging.getLogger(__name__)

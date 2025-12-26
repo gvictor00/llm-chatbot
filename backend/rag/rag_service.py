@@ -1,8 +1,8 @@
 import logging
 from typing import List, Dict, Any
-from src.rag.embedder import RagEmbedder
-from src.rag.vector_store import SimpleVectorStore, SimilarityResult
-from src.rag.models import EmbeddedDocument, DocumentMetadata
+from backend.rag.embedder import RagEmbedder
+from backend.rag.vector_store import SimpleVectorStore, SimilarityResult
+from backend.rag.models import EmbeddedDocument, DocumentMetadata
 
 logger = logging.getLogger(__name__)
 
@@ -15,6 +15,7 @@ class RAGService:
         self.embedder = RagEmbedder()
         self.vector_store = SimpleVectorStore()
         self.is_initialized = False
+        self._last_document_count = 0
     
     def initialize_with_documents(self, documents: List[DocumentMetadata]) -> bool:
         """
@@ -24,6 +25,9 @@ class RAGService:
         try:
             logger.info(f"Initializing RAG service with {len(documents)} documents")
             
+            # Clear existing documents to avoid duplicates
+            self.vector_store.clear()
+            
             # Embed all documents
             embedded_docs = self.embedder.embed_documents(documents)
             
@@ -31,6 +35,7 @@ class RAGService:
             self.vector_store.add_documents(embedded_docs)
             
             self.is_initialized = True
+            self._last_document_count = len(documents)
             logger.info("RAG service initialized successfully")
             return True
             

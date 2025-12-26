@@ -2,7 +2,7 @@ import logging
 from typing import List, Tuple
 import numpy as np
 from dataclasses import dataclass
-from src.rag.models import EmbeddedDocument, DocumentMetadata
+from backend.rag.models import EmbeddedDocument, DocumentMetadata
 
 logger = logging.getLogger(__name__)
 
