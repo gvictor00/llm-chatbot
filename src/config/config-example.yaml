@@ -1,0 +1,18 @@
+# Example configuration file for CI&T Flow API Integration
+# Copy this file to config.yaml and update with your actual values
+
+client:
+  name: "flow"
+  client_id: "YOUR_CLIENT_ID_HERE"
+  client_secret: "YOUR_CLIENT_SECRET_HERE"
+  app_to_access: "llm-api"
+  tenant: "YOUR_TENANT_HERE"
+  base_url: "https://flow.ciandt.com"
+
+rag:
+  documents_path: "files"
+  supported_file_types:
+    - ".txt"
+    - ".pdf"
+    - ".docx"
+  recurse_folders: false

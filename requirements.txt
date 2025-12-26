@@ -1,0 +1,20 @@
+# Backend dependencies
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+
+# YAML parsing
+pyyaml==6.0.1
+
+# HTTP client
+requests==2.31.0
+
+# RAG and document handling
+langchain>=0.1.0
+langchain-community
+# PDF parsing (updated for newer LangChain versions)
+pypdf>=3.0.0
+# Optional: For DOCX support (if you want to extend later)
+python-docx==1.1.0
+
+# Additional dependencies for robust file handling
+chardet==5.2.0
