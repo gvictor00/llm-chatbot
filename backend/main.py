@@ -29,8 +29,8 @@ def read_root():
 def health():
     try:
         # Uncomment when flow_client is available
-        # if flow_client.health_check():
-        #     return {"status": 200, "message": "Connected to CI&T Flow API successfully"}
+        if flow_client.health_check():
+            return {"status": 200, "message": "Connected to CI&T Flow API successfully"}
         return {"status": "ok", "message": "Backend is running"}
     except Exception as e:
         logger.error(f"Health check error: {e}")

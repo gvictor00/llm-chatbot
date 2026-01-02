@@ -1,3 +1,4 @@
+import json
 import requests
 from backend.config.config import config
 from backend.flow_api.endpoints import FlowAPIEndpoints
@@ -16,7 +17,6 @@ class FlowAPIClient:
         url = f"{self.base_url}{FlowAPIEndpoints.AUTH_TOKEN}"
         headers = {
             "Content-Type": "application/json",
-            "Accept": "application/json",
             "FlowTenant": self.tenant
         }
         payload = {
@@ -26,7 +26,7 @@ class FlowAPIClient:
         }
         try:
             print("Authenticating with payload:", payload)
-            response = requests.post(url, json=payload, headers=headers)
+            response = requests.post(url, data=json.dumps(payload), headers=headers)
             response.raise_for_status()
 
             if response.status_code == 200:
